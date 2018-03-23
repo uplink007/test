@@ -18,7 +18,6 @@ string SingletonShell::getParsedCurrentDirectory(){
         //getline(cin,buffer);
         string currentDirectory=const_cast<char*>(getcwd(cwd,this->buffer_size));
         int i =currentDirectory.find(home);
-        cout<<i<<endl;
         if(i!=-1 && currentDirectory.length()>home.length()){
           currentDirectory="~/"+currentDirectory.substr(i+(this->home.length())+1); 
         }else if (i != -1 ){
@@ -46,7 +45,10 @@ void SingletonShell::runShell(){
        // cout<<buffer<<endl;
         printShellDirectory();
 
-        getline(cin,dir);
+        if(!getline(cin,dir)){
+            cout << "C ya!\n";
+            exit(0);
+        }
 
         to_quit(dir);// if user input exit or quit
 
@@ -61,12 +63,13 @@ void SingletonShell::runShell(){
             // cout <<env_p<<endl;
             // if(env_p){
             //     cout << "Your PATH is: " << env_p <<endl;
-            // }     
-            cout<<dir<<endl;
+            // }  
+            errno=0;
             if(chdir(dir.c_str())<0)//check if directory was changed successfully 
             {
-                perror("OS SHell: cd:");//print error messege
+                perror("OS SHell: cd");//print error messege
             }
+            cout<<errno<<endl;
         }
 
         //buffer = "";
