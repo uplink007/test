@@ -28,7 +28,57 @@ string SingletonShell::getParsedCurrentDirectory(){
 void SingletonShell::printShellDirectory(){
     cout<< this->define + getParsedCurrentDirectory()<<">";
 }
+vector<string> split(const char *str, char c = ' ')
+{
+    vector<string> result;
 
+    do
+    {
+        const char *begin = str;
+
+        while(*str != c && *str)
+            str++;
+
+        result.push_back(string(begin, str));
+    } while (0 != *str++);
+
+    return result;
+}
+//________________________________________________________
+char** tokens(string s){
+    vector<string> tokens;
+    string token;
+    char** result;
+
+    for_each(s.begin(), s.end(), [&](char c) {
+    if (!isspace(c))
+        token += c;
+    else 
+    {
+        if (token.length()) tokens.push_back(token);
+        token.clear();
+    }
+    });
+    if (token.length()) tokens.push_back(token);
+    result= (char**)malloc(tokens.size()*sizeof(char*));
+    for(size_t i=0;i<tokens.size();i++){
+        result[i]=const_cast<char*>(tokens.at(i).c_str());
+    }
+
+    return result;
+
+}
+void SingletonShell::run_command_exec(string command){
+    char** cmd=tokens(command);
+    if(fork()){
+        
+    }else{
+        execvp(cmd[0], cmd);
+    }
+    wait(&this->exit_status);
+    free(cmd);
+}
+//____________________________________________________________-
 SingletonShell::SingletonShell()
 {
    this->define="OS SHell:";
@@ -71,6 +121,7 @@ void SingletonShell::runShell(){
             }
             cout<<errno<<endl;
         }
+       run_command_exec(dir);//need to change dir to command arguments !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         //buffer = "";
     }
