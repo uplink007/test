@@ -20,13 +20,13 @@ class SingletonShell
         const string welcome = "Welcome to OS SHell!";
         bool loop_active = true;
         char cwd[buffer_size];
-        int temp;
-        
+        string home;
         static SingletonShell* shell;
-
+        string getParsedCurrentDirectory();
         SingletonShell();
         bool first_cd(string dir);
-        bool to_quit(string choice);
+        void to_quit(string choice,int status=0);
+        void printShellDirectory();
 
     public:
         
